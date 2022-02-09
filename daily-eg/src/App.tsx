@@ -35,7 +35,7 @@ const createEg = ({height, width, position}:{height:number, width:number, positi
 		for(var x=0; x<width; x++){
 			const isEg=(position[0]===x && position[1]===y);
 			egRow.children.push(<Eg eg={isEg} />);
-			const sym=isEg ? ":eg:" : ":x:";
+			const sym=isEg ? ":egg:" : ":x:";
 			egString+=`||${sym}||`;
 		}
 		egString+="\n";
