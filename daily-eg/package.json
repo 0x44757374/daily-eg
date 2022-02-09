@@ -8,7 +8,7 @@
     "build": "vite build",
     "serve": "vite preview",
 		"fix": "cd dist && sed 's|\"/assets/|\"/daily-eg/assets/|g' index.html >> index.html.tmp && rm index.html && mv index.html.tmp index.html",
-		"deploy": "npm run fix && git add --all && git commit -m \"gh-pages deploy\" && git push origin gh-pages"
+		"deploy": "npm run fix && git add --all && git commit -m 'gh-pages' && git push origin gh-pages"
   },
   "license": "MIT",
   "devDependencies": {
