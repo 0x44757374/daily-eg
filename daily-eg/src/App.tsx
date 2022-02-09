@@ -135,22 +135,22 @@ const App: Component = () => {
 				</div>
 				<div class={styles.Content}>
 					<div class={styles.CopyPasta} onClick={()=>{
-						try{
-							navigator.clipboard.writeText(Eg().text);
-							alert("Daily Eg Copied to Clipboard")
-						}catch{
+						// try{
+						// 	navigator.clipboard.writeText(Eg().text);
+						// 	alert("Daily Eg Copied to Clipboard")
+						// }catch{
 							try{
 								window.prompt("Copy to clipboard: Ctrl+C, Enter", Eg().text);
 							}
 							catch{
 							}
-						}
+						// }
 					}}><h3>{<span class="material-icons">content_copy</span>} Copypasta</h3></div>
 					{Eg().grid}
 					<div class={styles.PastaWrapper}>
 						<div class={styles.IconButton} onClick={()=>{setShowText((prev)=>!prev)}}><h3>{<span class="material-icons">{showText() ? "visibility" : "visibility_off"}</span>} Pasta Text</h3></div>
 						<Show when={showText()}>
-							<textarea>{Eg().text}</textarea>
+							<textarea value={Eg().text}>{Eg().text}</textarea>
 						</Show>
 					</div>
 				</div>
