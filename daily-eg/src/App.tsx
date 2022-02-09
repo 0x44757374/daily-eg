@@ -36,7 +36,7 @@ const createEg = ({height, width, position}:{height:number, width:number, positi
 			const isEg=(position[0]===x && position[1]===y);
 			egRow.children.push(<Eg eg={isEg} />);
 			const sym=isEg ? ":egg:" : ":x:";
-			egString+=`||${sym}||`;
+			egString+=`||${sym}|| `;
 		}
 		egString+="\n";
 		egRows.push(egRow.element());
@@ -79,6 +79,23 @@ const App: Component = () => {
 	const [showText, setShowText] = createSignal(true);
 	const scale = (func:typeof setHeight, increment:number) => {
 		func(prev=>prev+increment);
+	}
+
+	const copyEg = ()=>{
+		try{
+			if(!navigator.clipboard){
+				window.prompt("Copy to clipboard: Ctrl+C, Enter", Eg().text);
+			}
+			navigator.clipboard.writeText(Eg().text).then(()=>{
+				alert("Daily Eg Copied to Clipboard!")
+			});
+		}catch{
+			try{
+				window.prompt("Copy to clipboard: Ctrl+C, Enter", Eg().text);
+			}
+			catch{
+			}
+		}
 	}
 
   return (
@@ -134,18 +151,7 @@ const App: Component = () => {
 					</div>{/* EgButton */}
 				</div>
 				<div class={styles.Content}>
-					<div class={styles.CopyPasta} onClick={()=>{
-						// try{
-						// 	navigator.clipboard.writeText(Eg().text);
-						// 	alert("Daily Eg Copied to Clipboard")
-						// }catch{
-							try{
-								window.prompt("Copy to clipboard: Ctrl+C, Enter", Eg().text);
-							}
-							catch{
-							}
-						// }
-					}}><h3>{<span class="material-icons">content_copy</span>} Copypasta</h3></div>
+					<div class={styles.CopyPasta} onClick={copyEg}><h3>{<span class="material-icons">content_copy</span>} Copypasta</h3></div>
 					{Eg().grid}
 					<div class={styles.PastaWrapper}>
 						<div class={styles.IconButton} onClick={()=>{setShowText((prev)=>!prev)}}><h3>{<span class="material-icons">{showText() ? "visibility" : "visibility_off"}</span>} Pasta Text</h3></div>
