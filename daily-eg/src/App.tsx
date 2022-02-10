@@ -1,5 +1,4 @@
-import { Component, createEffect, createMemo, createSignal,  JSXElement, on, Show } from 'solid-js';
-import {  food,  symbols } from 'discord-emoji';
+import { Component, createEffect, createSignal,  JSXElement, on, Show } from 'solid-js';
 import styles from './App.module.css';
 
 interface EgProps {
@@ -45,11 +44,11 @@ const Eg: Component<EgProps> = ({eg=false, cb=()=>{}, ...props}:any) => {
 	const [clicked, setClicked] = createSignal(false);
 	const [egStyle, setEgStyle] = createSignal(styles.shrinkOut);
 	const [shieldStyle, setShieldStyle] = createSignal(styles.fadeIn + " " + styles.shield);
-	const [symbol, setSymbol] = createSignal(symbols.x);
+	const [symbol, setSymbol] = createSignal("❌");
 	createEffect(on(clicked,()=>{
 		if(clicked()){
 			cb(eg);
-			setSymbol(eg ? food.egg : symbols.x);
+			setSymbol(eg ? "🥚" : "❌");
 			setShieldStyle(styles.fadeOut);
 			setEgStyle(styles.popIn + " " + styles.icon);
 		}
@@ -155,7 +154,7 @@ const App: Component = () => {
         <div>
 					<h1 class={styles.h1}>Daily {
 					<div class={styles.titleEg} onpointerenter={handleEnter} onpointerleave={handleLeave}>
-						<div class={titleEgStyle()}>{food.egg}</div>
+						<div class={titleEgStyle()}>🥚</div>
 						<div class={titleEgTextStyle()}>:eg:</div>
 					</div>
 				} Generator</h1>
@@ -197,7 +196,7 @@ const App: Component = () => {
 						</div>{/* Width */}
 					</div> {/* Controls */}
 					<div class={styles.EgButton} onclick={toggle}>
-						<div class={styles.EgImage}>{food.egg}</div>
+						<div class={styles.EgImage}>🥚</div>
 						<div class={styles.EgIcon}><span class="material-icons">refresh</span></div>
 					</div>{/* EgButton */}
 				</div>
