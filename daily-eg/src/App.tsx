@@ -1,18 +1,54 @@
-import { batch, Component, createEffect, createMemo, createSignal,  JSXElement, on, Show } from 'solid-js';
-import {  food,  symbols,  } from 'discord-emoji';
+import { Component, createEffect, createMemo, createSignal,  JSXElement, on, Show } from 'solid-js';
+import {  food,  symbols } from 'discord-emoji';
 import styles from './App.module.css';
 
 interface EgProps {
 	eg?:boolean;
+	cb?:Function;
 }
 
-const Eg: Component<EgProps> = ({eg=false,...props}:any) => {
+const winnerWinnerChickenDinner = () =>{
+	try{
+	var duration = 1 * 1000;
+	var end = Date.now() + duration;
+
+	(function frame() {
+		// launch a few confetti from the left edge
+		//@ts-ignore
+		confetti({
+			particleCount: 7,
+			angle: 60,
+			spread: 55,
+			origin: { x: 0 }
+		});
+		// and launch a few from the right edge
+		//@ts-ignore
+		confetti({
+			particleCount: 7,
+			angle: 120,
+			spread: 55,
+			origin: { x: 1 }
+		});
+
+		// keep going until we are out of time
+		if (Date.now() < end) {
+			requestAnimationFrame(frame);
+		}
+	}());
+	}
+	catch{
+
+	}
+}
+
+const Eg: Component<EgProps> = ({eg=false, cb=()=>{}, ...props}:any) => {
 	const [clicked, setClicked] = createSignal(false);
 	const [egStyle, setEgStyle] = createSignal(styles.shrinkOut);
 	const [shieldStyle, setShieldStyle] = createSignal(styles.fadeIn + " " + styles.shield);
 	const [symbol, setSymbol] = createSignal(symbols.x);
 	createEffect(on(clicked,()=>{
 		if(clicked()){
+			cb(eg);
 			setSymbol(eg ? food.egg : symbols.x);
 			setShieldStyle(styles.fadeOut);
 			setEgStyle(styles.popIn + " " + styles.icon);
@@ -27,25 +63,37 @@ const Eg: Component<EgProps> = ({eg=false,...props}:any) => {
 }
 
 
-const createEg = ({height, width, position}:{height:number, width:number, position:[number, number]}) => {
-	let egString = "";
+const createEg = ({height, width, position, setScore=(p:any)=>{}, onComplete=()=>{}}:{height:number, width:number, position:[number, number], setScore:any, onComplete:any}) => {
+	const eg = {
+		grid:<></>,
+		text:"",
+		complete: false
+	}
+
+	const inc = (match:boolean) => {
+		if(eg.complete)return;
+		setScore((prev:any)=>prev+1);
+		if(match){
+			eg.complete=true;
+			winnerWinnerChickenDinner();
+			onComplete(true);
+		}
+	}
+
 	const egRows = [] as JSXElement[];
 	for(var y=0; y<height; y++){
 		const egRow = {element:()=><div class={styles.egRow}>{egRow.children}</div>, children:[] as JSXElement[]};
 		for(var x=0; x<width; x++){
 			const isEg=(position[0]===x && position[1]===y);
-			egRow.children.push(<Eg eg={isEg} />);
+			egRow.children.push(<Eg cb={inc} eg={isEg} />);
 			const sym=isEg ? ":egg:" : ":x:";
-			egString+=`||${sym}|| `;
+			eg.text+=`||${sym} || `;
 		}
-		egString+="\n";
+		eg.text+="\n";
 		egRows.push(egRow.element());
 	}
-
-	return({
-		grid:<div class={styles.egGrid}>{egRows}</div>,
-		text:egString
-	});
+	eg.grid = <div class={styles.egGrid}>{egRows}</div>;
+	return(eg);
 }
 
 const App: Component = () => {
@@ -63,6 +111,8 @@ const App: Component = () => {
 
 	const [height, setHeight] = createSignal(6);
 	const [width, setWidth] = createSignal(6);
+	const [score, setScore] = createSignal(0);
+	const [complete, setComplete] = createSignal(false);
 	const [flip, setflip] = createSignal(false);
 	const toggle = ()=>{
 		setflip(prev=>!prev);
@@ -70,13 +120,14 @@ const App: Component = () => {
 	const [Eg, setEg] = createSignal({grid:[] as JSXElement[] | JSXElement, text:""});
 	const generate =  () => {
 		const position = [Math.floor(Math.random()*width()), Math.floor(Math.random()*height())] as [number, number];
-		// setEgPos(position);
-		setEg(createEg({height:height(), width:width(), position}));
+		setComplete(false);
+		setScore(0);
+		setEg(createEg({height:height(), width:width(), position, setScore, onComplete:setComplete}));
 	}
 
 	createEffect(on([height, width, flip], generate));
 
-	const [showText, setShowText] = createSignal(true);
+	const [showText, setShowText] = createSignal(false);
 	const scale = (func:typeof setHeight, increment:number) => {
 		func(prev=>prev+increment);
 	}
@@ -152,6 +203,7 @@ const App: Component = () => {
 				</div>
 				<div class={styles.Content}>
 					<div class={styles.CopyPasta} onClick={copyEg}><h3>{<span class="material-icons">content_copy</span>} Copypasta</h3></div>
+					<div>{`${complete() ? "Final" : ""} Score: ${score()}`}</div>
 					{Eg().grid}
 					<div class={styles.PastaWrapper}>
 						<div class={styles.IconButton} onClick={()=>{setShowText((prev)=>!prev)}}><h3>{<span class="material-icons">{showText() ? "visibility" : "visibility_off"}</span>} Pasta Text</h3></div>
