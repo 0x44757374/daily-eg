@@ -157,7 +157,7 @@ const App: Component = () => {
 						<div class={titleEgStyle()}>🥚</div>
 						<div class={titleEgTextStyle()}>:eg:</div>
 					</div>
-				} Generator</h1>
+				}</h1>
 				</div>
       </header>
 			<div class={styles.body}>
