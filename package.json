@@ -7,13 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-		"pages-worktree-init":"git worktree prune && git worktree add dist gh-pages",
-		"assets": "cp -rf src/assets/ dist/assets/",
+    "pages-worktree-init": "git worktree prune && cd dist && git worktree add dist gh-pages",
+    "assets": "cp -rf src/assets/ dist/assets/",
     "fix": "npm run assets && cd dist && sed 's|\"/assets/|\"/daily-eg/assets/|g' index.html >> index.html.tmp && rm index.html && mv index.html.tmp index.html",
     "deploy": "npm run fix && cd dist && git add --all && git commit -m 'gh-pages' && git push origin gh-pages"
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^17.0.17",
     "typescript": "^4.5.5",
     "vite": "^2.7.13",
     "vite-plugin-solid": "^2.2.5"

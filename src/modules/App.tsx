@@ -1,42 +1,45 @@
-import { Component, createEffect, createSignal,  JSXElement, on, Show } from 'solid-js';
 import styles from './App.module.css';
+import { Component, createEffect, createSignal,  JSXElement, on, Show } from 'solid-js';
 
 interface EgProps {
 	eg?:boolean;
 	cb?:Function;
 }
+// const confettiLib = document.createElement('script');
+// confettiLib.src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js";
+// document.head.append(confettiLib);
 
 const winnerWinnerChickenDinner = () =>{
 	try{
-	var duration = 1 * 1000;
-	var end = Date.now() + duration;
+		var duration = 1 * 1000;
+		var end = Date.now() + duration;
 
-	(function frame() {
-		// launch a few confetti from the left edge
-		//@ts-ignore
-		confetti({
-			particleCount: 7,
-			angle: 60,
-			spread: 55,
-			origin: { x: 0 }
-		});
-		// and launch a few from the right edge
-		//@ts-ignore
-		confetti({
-			particleCount: 7,
-			angle: 120,
-			spread: 55,
-			origin: { x: 1 }
-		});
+		(function frame() {
+			// launch a few confetti from the left edge
+			//@ts-ignore
+			confetti({
+				particleCount: 7,
+				angle: 60,
+				spread: 55,
+				origin: { x: 0 }
+			});
+			// and launch a few from the right edge
+			//@ts-ignore
+			confetti({
+				particleCount: 7,
+				angle: 120,
+				spread: 55,
+				origin: { x: 1 }
+			});
 
-		// keep going until we are out of time
-		if (Date.now() < end) {
-			requestAnimationFrame(frame);
-		}
-	}());
+			// keep going until we are out of time
+			if (Date.now() < end) {
+				requestAnimationFrame(frame);
+			}
+		}());
 	}
 	catch{
-
+		alert("Congratulations!!");
 	}
 }
 
